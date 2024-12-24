@@ -8,41 +8,40 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/content")
 public class ContentDiscoveryController {
 
-    private final ContentDiscoveryService contentDiscoveryService;
+    @Autowired
+    private ContentDiscoveryService contentDiscoveryService;
 
-    @PostMapping
-    public Content createContent(@RequestBody Content content) {
-        return contentDiscoveryService.createContent(content);
-    }
     @GetMapping("/trending")
-    public List<Content> getTrendingPosts() {
-        return contentDiscoveryService.getTrendingPosts();
+    public List<Content> getTrendingPosts(@RequestParam(defaultValue = "10") int limit) {
+        return contentDiscoveryService.getTrendingPosts(limit);
     }
-
 
     @GetMapping("/featured")
-    public List<Content> getFeaturedArticles() {
-        return contentDiscoveryService.getFeaturedArticles();
+    public List<Content> getFeaturedArticles(@RequestParam(defaultValue = "10") int limit) {
+        return contentDiscoveryService.getFeaturedArticles(limit);
     }
 
-    @GetMapping("/by-tags")
-    public List<Content> getPostsByTags(@RequestParam List<String> tags) {
-        return contentDiscoveryService.getPostsByTags(tags);
+    @GetMapping("/tag/{tag}")
+    public List<Content> getContentByTag(@PathVariable String tag, @RequestParam(defaultValue = "10") int limit) {
+        return contentDiscoveryService.getContentByTag(tag, limit);
     }
 
     @GetMapping("/latest")
-    public List<Content> getLatestPosts() {
-        return contentDiscoveryService.getLatestPosts();
+    public List<Content> getLatestPosts(@RequestParam(defaultValue = "10") int limit) {
+        return contentDiscoveryService.getLatestPosts(limit);
     }
 
     @GetMapping("/recommended")
-    public List<Content> getRecommendedPosts(@RequestParam List<String> userInterests) {
-        return contentDiscoveryService.getRecommendedPosts(userInterests);
+    public List<Content> getRecommendedPosts(@RequestParam List<String> interests, @RequestParam(defaultValue = "10") int limit) {
+        return contentDiscoveryService.getRecommendedPosts(interests, limit);
+    }
+    @PostMapping
+    public Content createContent(@RequestBody Content content) {
+        return contentDiscoveryService.createContent(content);
     }
 }
 
